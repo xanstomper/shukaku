@@ -1,0 +1,21 @@
+{
+  "campaign": "<campaign name>",
+  "created": "<ISO-8601>",
+  "ingested": [
+    {"finding": "<finding ID / chain>", "proof": "<read-only proof ref>", "at": "<ISO-8601>"}
+  ],
+  "crown": [
+    {
+      "asset": "<table|bucket|export|tenant|repo>",
+      "class": "PII|FIN|CRED|BACKUP|SRC|SASS",
+      "scope": "<counts, never contents>",
+      "value": "$ESTIMATE range",
+      "basis": "<market-ladder | benchmark>",
+      "source": "<finding ID>",
+      "at": "<ISO-8601>"
+    }
+  ],
+  "disclosures": [
+    {"obligation": "<regulator|obligation> · <timeline> · <prerequisite>", "at": "<ISO-8601>"}
+  ]
+}
