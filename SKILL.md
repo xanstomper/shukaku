@@ -1,7 +1,7 @@
 ---
 name: shukaku
 description: "Trigger `shukaku`. The Harvest Mandate — post-compromise data validation, valuation, and disclosure. What an attacker could take, priced and packaged."
-version: 1.0.0
+version: 1.1.0
 author: Hermes Agent
 license: MIT
 platforms: [linux]
@@ -25,22 +25,28 @@ extortion market does, and builds the breach-disclosure package the operator's
 organization would owe. It turns 3AM's compromises from technical findings into
 business verdicts.
 
-## The Family Tree (roles)
+## The Family Tree (the dispatcher's canon — seven mandates, one gate)
 
 ```
-   THE HOLYSHIT FAMILY — one chain, four roles, one gate
-   HolyShit!     3AM Shinjitsu       SHUKAKU             KAIRO
-   (SEARCHER)    (ATTACKER)          (HARVESTER)         (the metal)
-   finds what's  gets in, takes      catalogs · prices ·  hardware/firmware
-   there ·       over, certifies     discloses what an    planes when devices
-   65+ cases     chains (T1–T7)      attacker could take  enter the chain
+   THE HOLYSHIT FAMILY — one chain, seven mandates, one gate
+   BARBICAN     HOLYSHIT      UNDERCROFT    KAIRO        3AM          SHUKAKU       SHIKI
+   (SHIELD)     (FINDER)      (DESCENT)     (SYNTH)      (ATTACKER)   (HARVESTER)   (COMMAND)
+   posture ·    finds what's  live read-    findings →   sweep ·      catalog ·     conducts
+   vantage ·    there · 65+   only engage-  attacks +    takeover ·   price ·       the whole
+   sanitize ·   cases         ment on the   chains       growth loop  disclose      chain
+   wipe                       target's skin
 ```
 
+- `spydermonkey` — the dispatcher: routes every goal; `spydermonkey route --goal
+  "harvest what they could take"` lands here. Load it first.
+- `barbican` — the shield: no harvest runs without the posture gate.
 - `holyshit-mode` — the searcher: recipes + discovery canon, normative by reference.
+- `undercroft` — the descent: live read-only engagement on the target's own skin.
 - `3am-shinjitsu` — the attacker: sweep, synthesis, takeover layers. SHUKAKU consumes
   its CONFIRMED findings and certified chains.
-- `kairo` — the metal: hardware compromise findings (device data, keys, firmware
+- `kairo` — the synthesizer: hardware-plane findings (device data, keys, firmware
   secrets) enter the harvest register too.
+- `shiki` — the command: conducts the family; SHUKAKU is its P5 impact layer.
 
 ## When to Use
 
@@ -131,9 +137,11 @@ DISCLOSE: <regulator> · <timeline> · <prerequisite>
 
 `scripts/shukaku.py` — stdlib CLI:
 - `ingest --target <campaign> --finding "<id>" --proof "<read-only proof ref>"`
-- `crown --target <t> --asset "<table|bucket|export>" --class PII|FIN|CRED|BACKUP|SRC|SASS --scope "<count, not contents>" --value "$range" [--basis "..."]`
-- `disclose --target <t> --add "<regulator|obligation> · <timeline> · <prerequisite>"`
-- `report --target <t> [--output F]` — the harvest deliverable
+- `crown --target <t> --asset "<table|bucket|export>" --class PII|FIN|CRED|BACKUP|SRC|SASS --scope "<count, not contents>" --source "<ingested finding ID>" [--value "$ESTIMATE …"] [--basis "…"]` — evidence-chain enforced: unsourced crowns refuse (rc=2), values must carry an ESTIMATE label (defaults from the ladder)
+- `exclude --target <t> --finding "<id>" --reason "no data reach | out of scope | wall"`
+- `disclose --target <t> --trigger PII-US|PII-EU|FIN|HEALTH|CONTRACT|RANSOM [--note "…"]` (or `--add "<obligation> · <timeline> · <prerequisite>"`)
+- `ladder [--class C]` — the valuation ladder + disclosure map (playbook canon)
+- `report --target <t> [--output F]` — the harvest deliverable: crown-entry standard, valuation summary, remediation prerequisites, integrity warnings
 - `verify` — self-check
 
 State: `~/.redteam/campaigns/<campaign>/harvest-state.json`.
@@ -147,8 +155,14 @@ State: `~/.redteam/campaigns/<campaign>/harvest-state.json`.
 
 ## Relations
 
+- `spydermonkey` — THE DISPATCHER: routes goals; harvest keywords (`harvest · crown ·
+  price · disclose · impact`) land here.
+- `barbican` — the shield (the gate).
+- `shiki` — the command: conducts the family; SHUKAKU is its P5 impact layer.
 - `holyshit-mode` — the searcher (discovery + case canon).
+- `undercroft` — the descent (live read-only engagement).
 - `3am-shinjitsu` — the attacker (findings + chains are SHUKAKU's input).
-- `kairo` — the metal (hardware-plane findings feed the register).
-- Tree: HolyShit (searcher) · 3AM (attacker) · SHUKAKU (harvester) · KAIRO (metal —
-  support branch). All offensive, one gate, catalog-only harvest.
+- `kairo` — the synthesizer (hardware-plane findings feed the register).
+- Tree: BARBICAN (shield) → HOLYSHIT (finder) → UNDERCROFT (descent) → KAIRO
+  (synthesizer) → 3AM (attacker) → SHUKAKU (harvester, P5), conducted by SHIKI
+  (command), dispatched by SPYDERMONKEY. All offensive, one gate, catalog-only harvest.

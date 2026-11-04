@@ -6,14 +6,19 @@
   ],
   "crown": [
     {
+      "id": "crown-001",
       "asset": "<table|bucket|export|tenant|repo>",
       "class": "PII|FIN|CRED|BACKUP|SRC|SASS",
       "scope": "<counts, never contents>",
-      "value": "$ESTIMATE range",
+      "value": "$ESTIMATE range (unit)",
       "basis": "<market-ladder | benchmark>",
-      "source": "<finding ID>",
+      "source": "<ingested finding ID>",
+      "proof": "<source finding's read-only proof ref>",
       "at": "<ISO-8601>"
     }
+  ],
+  "excluded": [
+    {"finding": "<finding ID>", "reason": "no data reach | out of scope | wall", "at": "<ISO-8601>"}
   ],
   "disclosures": [
     {"obligation": "<regulator|obligation> · <timeline> · <prerequisite>", "at": "<ISO-8601>"}

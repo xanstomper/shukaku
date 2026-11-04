@@ -1,0 +1,39 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile
+        run: python3 -m py_compile scripts/shukaku.py
+
+      - name: CLI smoke tests (isolated HOME)
+        run: |
+          set -e
+          export HOME="$RUNNER_TEMP/shukaku-home"
+          mkdir -p "$HOME"
+          S=scripts/shukaku.py
+          python3 $S --help > /dev/null
+          python3 $S verify | grep -q 'ALL PASS'
+          python3 $S ladder | grep -q 'valuation ladder'
+          python3 $S ladder | grep -q 'disclosure map'
+          python3 $S ingest --target ci --finding "3AM-CI-1:TAKEOVER" --proof "count(*) = 42"
+          python3 $S crown --target ci --asset users --class PII --scope "42 rows" 2>/dev/null && exit 1 || test $? -eq 2
+          python3 $S crown --target ci --asset users --class PII --scope "42 rows" --source "3AM-CI-1:TAKEOVER" --value "100" 2>/dev/null && exit 1 || test $? -eq 2
+          python3 $S crown --target ci --asset users --class PII --scope "42 rows" --source "3AM-CI-1:TAKEOVER" | grep -q 'ESTIMATE'
+          python3 $S exclude --target ci --finding "X:1" --reason "no data reach" | grep -q excluded
+          python3 $S disclose --target ci --trigger PII-EU | grep -q 'GDPR Art. 33/34'
+          python3 $S report --target ci --output rep.md
+          grep -q 'Crown register' rep.md
+          grep -q 'Valuation summary' rep.md
+
+      - name: Stdlib-only check
+        run: |
+          ! grep -E '^[[:space:]]*(import|from)[[:space:]]+(requests|flask|httpx|aiohttp|urllib3)' scripts/shukaku.py
