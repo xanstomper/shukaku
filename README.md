@@ -11,14 +11,15 @@
 
 # 🏺 SHUKAKU
 
-### *Catalog · price · disclose — what an attacker could actually take.*
+### *Reason · hunt · crown · price · disclose — then feed the family.*
 
-**The Harvest Mandate of the HolyShit family** — post-compromise data validation,
-valuation, and disclosure. It turns 3AM's compromises from technical findings into
-**business verdicts**: tables, rows, records, keys, and dollars — priced the way the
-extortion market does, packaged the way the law demands. **Without moving a single row.**
+**The Harvest Mandate of the HolyShit family** — the harvester. It REASONS about
+what should be harvestable from confirmed access, HUNTS for it (read-only), prices
+it the way the extortion market does, builds the breach-disclosure package — and
+**feeds every discovery back to the other mandates so the next assault is stronger.**
+Without moving a single row.
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blueviolet?style=for-the-badge)](#the-cli)
+[![Version](https://img.shields.io/badge/version-1.2.0-blueviolet?style=for-the-badge)](#the-cli)
 [![Python](https://img.shields.io/badge/python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](#quickstart)
 [![Platform](https://img.shields.io/badge/platform-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](#quickstart)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen?style=for-the-badge)](#why-its-powerful)
@@ -58,19 +59,71 @@ owe. It is the P4→P5 completing role: the closeout's impact layer.
 
 ## How it works
 
-### The harvest loop
+### The harvest loop — it closes
 
 ```
 ingest CONFIRMED findings/chains (3AM state · case files · ledgers)
-→ per-finding reach inventory (read-only proofs, ≤3 redacted samples)
+→ REASON   what SHOULD be harvestable — inferred planes from confirmed access
+→ HUNT     read-only proofs: exact static probes or GET-only live surface probes
 → crown register (what · where · how many · sensitivity class)
 → valuation (tier ladder, ESTIMATE ranges)
 → disclosure map (regulator · timeline · scope · prerequisites)
+→ FEED the family (3AM vectors · undercroft surface · holyshit recipes → kairo)
 → SHUKAKU report (the business-impact verdict layer) → P5 closeout
 ```
 
 Every ingested finding is either harvested (crown entry) or **explicitly excluded
-with a reason** — never padded.
+with a reason** — never padded. The loop CLOSES: what the harvest learns becomes
+attack material the whole family carries.
+
+### The reasoning engine — the harvester hunts
+
+`reason` reads the campaign's confirmed access (ingested findings, undercroft
+CONFIRMED seams, kairo device notes) and infers the harvestable planes, ranked by
+the ladder:
+
+```
+═══ SHUKAKU reason — what SHOULD be harvestable (3 hypotheses) ═══
+  H-001 [PII   ] SQL plane        database tables + row counts
+         source: 3AM-T1-CHAIN7:TAKEOVER
+         probe:  SELECT table_name, table_rows FROM information_schema.tables
+  H-002 [BACKUP] harvest surface  exposed dumps/exports/env/config paths
+         source: /admin/export
+         probe:  GET-only harvest-surface probe (see: hunt --live)
+  H-003 [SASS  ] SaaS admin       tenant export inventory + member counts
+         source: /admin/export
+         probe:  export-config list + member count (read-only)
+```
+
+`hunt` works the hypotheses:
+
+- **static** (default) — prints the EXACT read-only proof per hypothesis; nothing
+  is executed. Safe by construction.
+- **`--live URL`** — GET-only probes of the harvest surface (backup dumps, exports,
+  .env/.git paths, admin exports — the data plane, not the route plane):
+
+```
+▸ hunt --live: 8 GET-only probes (0.2s pacing, burst pauses) — catalog-only
+    HARVESTABLE 200  https://target.example/backup.zip  (4096B)
+▸ hunt done: 1 harvestable path(s) confirmed (registered: 1 total)
+```
+
+### `feed` — the loop that arms the family
+
+Every crown and CONFIRMED hunt hit becomes family attack material, schema-true
+for each consumer:
+
+```
+▸ SHUKAKU feeds the family — the next assault starts smarter:
+    3AM: 2 vector row(s) → ~/.redteam/learned-vectors.jsonl
+    undercroft: 1 CONFIRMED surface entry → the campaign ledger
+    holyshit: 1 recipe card(s) → ~/.redteam/synthesized-recipes.md
+  next: 3AM promote --apply --verified · kairo ingest --target t3
+```
+
+Exposed backup → 3AM flaw 13 (cloud-misconfig) · seam K (cloud-policy). Exposed
+.env/.git → flaw 15 (database-exposure) · seam G (edgefn<->db). The sweep picks
+them up on the next campaign — fed rows are recorded, **never double-shipped**.
 
 ### The evidence chain — enforced, not aspirational
 
@@ -120,6 +173,15 @@ $ shukaku ladder
 
 ## Why it's powerful
 
+- **The harvester hunts.** It doesn't wait to be told what exists — `reason`
+  infers the harvestable planes from the access the family already proved, ranks
+  them by value, and `hunt` goes after them read-only. Confirmed DB access
+  *implies* a table inventory; confirmed tenant admin *implies* an export list.
+  The harvester names them, then proves them.
+- **The loop compounds.** `feed` converts every discovery into attack material the
+  whole family carries — 3AM vectors, undercroft CONFIRMED surface, holyshit
+  recipes, kairo's queue. The next assault against the target starts smarter, and
+  the one after that too.
 - **The verdict layer.** Every other mandate proves what's *possible*; SHUKAKU
   proves what's *worth* — and turns the proof into the disclosure obligations a
   real breach would trigger. That's the difference between a pentest report and a
@@ -155,8 +217,12 @@ Typical run on a declared estate:
 ```bash
 T=my-campaign
 shukaku ingest --target $T --finding "3AM-CHAIN7:TAKEOVER" --proof "count(*) = 12140"
+shukaku reason --target $T                    # what SHOULD be harvestable, ranked
+shukaku hunt --target $T                      # exact read-only proofs (static)
+shukaku hunt --target $T --live https://t.example --max 30   # GET-only surface probe
 shukaku crown  --target $T --asset users --class PII --scope "12,140 rows" --source "3AM-CHAIN7:TAKEOVER"
 shukaku disclose --target $T --trigger PII-EU
+shukaku feed --target $T                      # 3AM + undercroft + holyshit get stronger
 shukaku report --target $T --output harvest.md
 ```
 
@@ -165,11 +231,14 @@ shukaku report --target $T --output harvest.md
 | Command | What it does |
 |---|---|
 | `ingest --target C --finding ID --proof REF` | ingest a confirmed finding (read-only proof ref) |
+| `reason --target C [--json]` | infer what SHOULD be harvestable from confirmed access → ranked hypotheses |
+| `hunt --target C [--live URL] [--max N] [--dry-run]` | work the hypotheses: exact read-only proofs (static) or GET-only harvest-surface probes (live, catalog-only) |
 | `crown --target C --asset A --class K --scope S --source ID [--value V] [--basis B]` | register a crown entry — evidence-chain enforced, ladder-priced |
 | `exclude --target C --finding ID --reason R` | exclude a finding with a reason — never padded |
 | `disclose --target C --trigger T [--note N]` \| `--add "…"` | map a disclosure obligation from the playbook |
+| `feed --target C` | harvest → family: 3AM vectors, undercroft surface, holyshit recipes — idempotent, never double-shipped |
 | `ladder [--class K]` | the valuation ladder + disclosure map |
-| `report --target C [--output F]` | the harvest deliverable: crown standard, valuation summary, remediation prerequisites, integrity warnings |
+| `report --target C [--output F]` | the harvest deliverable: hypotheses, hunt results, crown standard, valuation, remediation prerequisites, fed-loop, integrity warnings |
 | `verify` | self-check |
 
 Exit codes: `0` ok · `1` verify failure · `2` usage/state error (walls).
@@ -190,9 +259,9 @@ Exit codes: `0` ok · `1` verify failure · `2` usage/state error (walls).
 shukaku/
 ├── SKILL.md                        # the doctrine
 ├── scripts/
-│   └── shukaku.py                  # ingest · crown · exclude · disclose · ladder · report · verify
+│   └── shukaku.py                  # ingest · reason · hunt · crown · exclude · disclose · feed · ladder · report · verify
 ├── references/
-│   └── harvest-playbook.md         # catalog/valuation/disclosure batteries + evidence-chain rules
+│   └── harvest-playbook.md         # catalog/valuation/disclosure batteries + evidence-chain rules + hunt batteries
 └── templates/
     └── harvest-state.json          # per-campaign state starter
 ```

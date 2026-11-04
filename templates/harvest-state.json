@@ -20,6 +20,18 @@
   "excluded": [
     {"finding": "<finding ID>", "reason": "no data reach | out of scope | wall", "at": "<ISO-8601>"}
   ],
+  "hypotheses": [
+    {"id": "H-001", "plane": "SQL plane|object storage|SaaS admin|source plane|host filesystem|keyring/device|harvest surface|drift",
+     "asset": "<what should be harvestable>", "class": "PII|FIN|CRED|BACKUP|SRC|SASS",
+     "probe": "<exact read-only probe>", "proof": "<proof shape>", "source": "<finding ID>",
+     "status": "OPEN|HUNTED|HARVESTED", "at": "<ISO-8601>"}
+  ],
+  "hunted": [
+    {"url": "<path probed>", "code": 200, "bytes": 0, "status": "CONFIRMED", "at": "<ISO-8601>"}
+  ],
+  "fed": [
+    {"kind": "crown|hunt", "what": "<crown id or url>", "to": "3AM|undercroft|holyshit", "at": "<ISO-8601>"}
+  ],
   "disclosures": [
     {"obligation": "<regulator|obligation> · <timeline> · <prerequisite>", "at": "<ISO-8601>"}
   ]

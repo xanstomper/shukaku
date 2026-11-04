@@ -1,7 +1,7 @@
 ---
 name: shukaku
 description: "Trigger `shukaku`. The Harvest Mandate — post-compromise data validation, valuation, and disclosure. What an attacker could take, priced and packaged."
-version: 1.1.0
+version: 1.2.0
 author: Hermes Agent
 license: MIT
 platforms: [linux]
@@ -96,15 +96,54 @@ objective · authorization. Recorded declaration = the entire gate (family canon
 
 ```
 ingest CONFIRMED findings/chains (3AM state · case files · ledgers)
+→ REASON — what SHOULD be harvestable (inferred planes from confirmed access)
+→ HUNT — read-only proofs: exact static probes or GET-only live surface probes
 → per-finding reach inventory (read-only proofs, ≤3 redacted samples)
 → crown register (what · where · how many · sensitivity class)
 → valuation (tier ladder, ESTIMATE ranges)
 → disclosure map (regulator · timeline · scope · prerequisites)
+→ FEED the family (3AM vectors · undercroft surface · holyshit recipes → kairo)
 → SHUKAKU report (the business-impact verdict layer) → P5 closeout
 ```
 
 Every ingested finding is either harvested (register entry) or explicitly excluded
-with a reason (no data reach, out of scope, wall).
+with a reason (no data reach, out of scope, wall). The loop CLOSES: everything the
+harvest learns becomes attack material the whole family carries — the next assault
+starts smarter.
+
+## The Reasoning Engine (v1.2.0 — the harvester hunts)
+
+`shukaku reason --target <t>` reads the campaign's confirmed access (ingested
+findings + undercroft CONFIRMED seams + kairo device notes) and infers the
+harvestable PLANES, ranked by the valuation ladder:
+
+- SQL access → table enumeration + row counts (`information_schema`, read-only)
+- bucket access → key/prefix inventory · tenant/admin → export inventory + counts
+- repo access → secret-class counts on operator-owned code
+- host/shell → env vars, key files, cron listings (counts, never contents)
+- keys/devices → keyring + cert inventories · web/API reach → the harvest surface
+- registered crowns → drift re-verify hypotheses (findings decay)
+
+`shukaku hunt --target <t>` works the hypotheses:
+- **static** (default) — prints the EXACT read-only proof per hypothesis; nothing
+  is executed. Safe by construction.
+- **`--live URL`** — GET-only probes of the harvest surface (backup dumps, exports,
+  .env/.git/config paths, admin exports — the data plane, not the route plane):
+  200s register CONFIRMED with body sizes; nothing is downloaded, nothing leaves
+  the register. 0.2s pacing, burst pauses per the noise budget.
+
+`shukaku feed --target <t>` — THE LOOP: every crown and CONFIRMED hunt hit becomes
+family attack material, schema-true for each consumer:
+
+- **3AM** — `(flaw, seam, probe, confirmed_when)` rows → `learned-vectors.jsonl`
+  (exposed backup → flaw 13 cloud-misconfig · seam K cloud-policy; exposed
+  .env/.git → flaw 15 database-exposure · seam G edgefn<->db) — then
+  `3AM promote --apply --verified` merges them into the living matrix.
+- **undercroft** — CONFIRMED surface entries → its state ledger (prioritize and
+  descend pick them up immediately).
+- **holyshit** — recipe cards → `synthesized-recipes.md`.
+- **kairo** — ingests the family states on its next run; the queue grows.
+- Rows are marked fed — **never double-shipped**.
 
 ## Working with the chain
 
@@ -137,11 +176,14 @@ DISCLOSE: <regulator> · <timeline> · <prerequisite>
 
 `scripts/shukaku.py` — stdlib CLI:
 - `ingest --target <campaign> --finding "<id>" --proof "<read-only proof ref>"`
+- `reason --target <t> [--json]` — infer what SHOULD be harvestable from confirmed access → ranked hypotheses
+- `hunt --target <t> [--live URL] [--cookie k=v] [--dry-run] [--max N]` — work the hypotheses: exact read-only proofs (static, nothing executed) or GET-only harvest-surface probes (live, catalog-only)
 - `crown --target <t> --asset "<table|bucket|export>" --class PII|FIN|CRED|BACKUP|SRC|SASS --scope "<count, not contents>" --source "<ingested finding ID>" [--value "$ESTIMATE …"] [--basis "…"]` — evidence-chain enforced: unsourced crowns refuse (rc=2), values must carry an ESTIMATE label (defaults from the ladder)
 - `exclude --target <t> --finding "<id>" --reason "no data reach | out of scope | wall"`
 - `disclose --target <t> --trigger PII-US|PII-EU|FIN|HEALTH|CONTRACT|RANSOM [--note "…"]` (or `--add "<obligation> · <timeline> · <prerequisite>"`)
+- `feed --target <t>` — harvest → family: 3AM vector rows, undercroft CONFIRMED surface, holyshit recipe cards (kairo ingests next); idempotent, never double-shipped
 - `ladder [--class C]` — the valuation ladder + disclosure map (playbook canon)
-- `report --target <t> [--output F]` — the harvest deliverable: crown-entry standard, valuation summary, remediation prerequisites, integrity warnings
+- `report --target <t> [--output F]` — the harvest deliverable: hypotheses, hunt results, crown-entry standard, valuation summary, remediation prerequisites, fed-loop, integrity warnings
 - `verify` — self-check
 
 State: `~/.redteam/campaigns/<campaign>/harvest-state.json`.

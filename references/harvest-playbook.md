@@ -69,3 +69,42 @@ would owe, it is never used to threaten anyone.
   disclosure map + remediation prerequisites (what must happen before the
   organization can call the breach closed).
 - Never move data, never copy, never threaten. The register IS the harvest.
+
+## The hunt batteries (v1.2 — the harvester hunts)
+
+### Signal → harvestable plane (the reasoning table)
+
+`reason` matches confirmed access against these signals; each hit becomes a ranked
+hypothesis with the exact read-only proof:
+
+| Signal (regex on findings/proofs/ledgers) | Plane | Class | Read-only proof |
+|---|---|---|---|
+| sql / database / select count | SQL plane | PII | `information_schema.tables` + row counts |
+| s3 / bucket / object store / minio | object storage | BACKUP | bucket key inventory + prefixes |
+| admin / tenant / saas / export | SaaS admin | SASS | export-config list + member counts |
+| repo / source / github | source plane | SRC | repo list + secret-class counts |
+| ssh / shell / root / host | host filesystem | CRED | env/cron/keyfile listings (counts) |
+| key / secret / token / firmware | keyring/device | CRED | keyring + cert inventories |
+| http / url / api / endpoint | harvest surface | BACKUP | GET-only surface probe |
+| registered crowns | drift | (same) | re-run the reach proof |
+
+### The harvest surface (GET-only, `hunt --live`)
+
+backup archives (`backup.zip|tar.gz|sql`, `dump.sql`, `db.sqlite`…), env/config
+leaks (`.env`, `.git/config`, `config.*.bak`), admin/admin-export paths,
+`api/export(s)`, `debug/vars`, `server-status`. Data plane only — route probing is
+UNDERCROFT's. 200s register CONFIRMED with body sizes; **nothing is downloaded**.
+
+### The feed mappings (discovery → family material)
+
+| Discovery | → 3AM row (flaw · seam) | → undercroft | → holyshit |
+|---|---|---|---|
+| exposed backup/dump (hunt or BACKUP crown) | 13 cloud-misconfig · K cloud-policy | — | recipe card |
+| exposed .env/.git/config | 15 database-exposure · G edgefn<->db | CONFIRMED surface | recipe card |
+| admin/export reach (SASS crown) | 6 identifier-trust · C auth<->backend-binding | CONFIRMED surface (admin) | — |
+| data plane via harvested access (PII/FIN crown) | 15 database-exposure · G edgefn<->db | — | — |
+| SRC crown | 2 trust-in-client-params · B client<->server-validation | — | recipe card |
+| CRED crown | 10 entropy/forge · C auth<->backend-binding (reuse check) | — | — |
+
+Feed is idempotent per (kind, what, destination) — never double-shipped. Next
+steps after feed: `3AM promote --apply --verified` · `kairo ingest --target <t>`.

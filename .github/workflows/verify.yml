@@ -24,15 +24,23 @@ jobs:
           python3 $S verify | grep -q 'ALL PASS'
           python3 $S ladder | grep -q 'valuation ladder'
           python3 $S ladder | grep -q 'disclosure map'
-          python3 $S ingest --target ci --finding "3AM-CI-1:TAKEOVER" --proof "count(*) = 42"
+          python3 $S reason --target ci 2>/dev/null && exit 1 || test $? -eq 2
+          python3 $S ingest --target ci --finding "3AM-CI-1:TAKEOVER" --proof "SELECT count(*) FROM users = 42"
+          python3 $S reason --target ci | grep -q 'SHOULD be harvestable'
+          python3 $S reason --target ci | grep -q 'SQL plane'
+          python3 $S hunt --target ci | grep -q 'read-only proofs'
+          python3 $S hunt --target ci --live http://127.0.0.1:9 --dry-run --max 3 | grep -q 'dry-run'
           python3 $S crown --target ci --asset users --class PII --scope "42 rows" 2>/dev/null && exit 1 || test $? -eq 2
           python3 $S crown --target ci --asset users --class PII --scope "42 rows" --source "3AM-CI-1:TAKEOVER" --value "100" 2>/dev/null && exit 1 || test $? -eq 2
           python3 $S crown --target ci --asset users --class PII --scope "42 rows" --source "3AM-CI-1:TAKEOVER" | grep -q 'ESTIMATE'
+          python3 $S feed --target ci | grep -q '3AM'
+          python3 $S feed --target ci | grep -q 'already fed'
           python3 $S exclude --target ci --finding "X:1" --reason "no data reach" | grep -q excluded
           python3 $S disclose --target ci --trigger PII-EU | grep -q 'GDPR Art. 33/34'
           python3 $S report --target ci --output rep.md
           grep -q 'Crown register' rep.md
           grep -q 'Valuation summary' rep.md
+          grep -q 'Fed back to the family' rep.md
 
       - name: Stdlib-only check
         run: |
