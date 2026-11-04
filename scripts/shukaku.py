@@ -147,6 +147,15 @@ HARVEST_SURFACE = [
     "web.config.bak", "composer.json", "admin/backups/", "admin/export",
     "api/export", "api/exports", "api/admin/export", "export", "exports/",
     "debug/vars", "phpinfo.php", "server-status", ".DS_Store",
+    "backups/backup.zip", "backup/backend.zip", "db/backup.sql", "site.zip",
+    "website-backup.zip", "old/", "staging/", "test/", "dev/", "config.json",
+    "config.yml", "config.yaml", "settings.py", "app.config", ".env.local",
+    ".env.production", "environment.properties", "application.properties",
+    "admin/db/", "admin/backup", "manager/backups", "api/admin/backup",
+    "api/export/users", "api/export/all", "export/users.csv", "users.csv",
+    "customers.csv", "orders.csv", "admin/users", "actuator/heapdump",
+    "actuator/env", "debug/pprof", "server-info", ".gitlab-ci.yml",
+    "Jenkinsfile", ".circleci/config.yml", "composer.lock", "yarn.lock",
 ]
 
 # ── The feed engine ──────────────────────────────────────────────────────────
