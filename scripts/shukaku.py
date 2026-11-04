@@ -318,12 +318,42 @@ def cmd_reason(args):
     return 0
 
 
+def _scope_gate(value):
+    """The scope authority (~/.redteam/scope.json): True=in scope, False=out,
+    None=no authority (ungated legacy mode)."""
+    sp = Path.home() / ".redteam" / "scope.json"
+    if not sp.exists():
+        return None
+    try:
+        scope = json.loads(sp.read_text())
+    except Exception:
+        return None
+    from urllib.parse import urlparse
+    v = value.strip().lower()
+    host = urlparse(v).hostname or v if "://" in v else v
+    for o in scope.get("out_of_scope", []):
+        if host == o.lower() or host.endswith("." + o.lower()):
+            return False
+    for i in scope.get("in_scope", []):
+        i = i.lower()
+        ih = urlparse(i).hostname or i if "://" in i else i
+        if host == ih or host.endswith("." + ih):
+            return True
+    return False
+
+
 def cmd_hunt(args):
     st = base(args.target)
     if args.live:
         if not args.live.startswith(("http://", "https://")):
             print("✗ --live wants a base URL (http/https)", file=sys.stderr)
             return 2
+        if not args.dry_run:
+            gate = _scope_gate(args.live)
+            if gate is False:
+                print("✗ SCOPE CLOSED — live harvest refuses out-of-scope targets"
+                      " (spydermonkey scope check --value <url>)", file=sys.stderr)
+                return 1
         base_url = args.live.rstrip("/")
         cands = [f"{base_url}/{w}" for w in HARVEST_SURFACE][: (args.max or 999)]
         if args.dry_run:
