@@ -62,7 +62,7 @@ Run the trigger sequence ONCE, then collect P0 via the agent's question feature:
 
 ```text
 ▸ SHUKAKU — HARVEST MANDATE ARMED
-  ═══════════════════════════════════
+
   [ OK ] crown register open
   [ OK ] valuation ladder loaded
   [ OK ] disclosure map ready
